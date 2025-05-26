@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import likelion13th.likelionblog.domain.Article;
 import likelion13th.likelionblog.dto.*;
 import likelion13th.likelionblog.repository.ArticleRepository;
+import likelion13th.likelionblog.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,30 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
-    private final ArticleRepository articleRepository; //DB
+    private final ArticleRepository articleRepository;
+    private final CommentRepository commentRepository;
+
+    //단일 글 조회
+    public ArticleResponse getArticle(Long id){
+         /*1. JPA의 findById()를 사용하여 DB에서 id가 일치하는 게시글 찾기.
+              id가 일치하는 게시글이 DB에 없으면 에러 반환*/
+        Article article=articleRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("해당 ID의 게시글을 찾을 수 없습니다. ID: "+id));
+
+        /*2. 해당 게시글에 달려있는 댓글들 가져오기*/
+        List<CommentResponse> comments=getCommentList(article);
+
+        //3. ArticleResponse DTO 생성하여 반환
+        return ArticleResponse.of(article);
+    }
+
+    //특정 게시글에 달려있는 댓글목록 가져오기
+    private List<CommentResponse> getCommentList(Article article){
+        return commentRepository.findByArticle(article).stream()
+                .map(comment->CommentResponse.of(comment))
+                .toList();
+    }
+
 
     //게시글 생성
     public ArticleResponse addArticle(AddArticleRequest request){
@@ -25,7 +49,7 @@ public class ArticleService {
 
        /* 3. article 객체를 response DTO 생성하여 반환
           response 클래스의 정작 팩토리 메서드 of() 통해 API 응답객체 생성 */
-        return ArticleResponse.of(article); //응답 생성해서 반환
+        return ArticleResponse.of(article);
     }
 
     //전체 글 조회
@@ -38,22 +62,11 @@ public class ArticleService {
                 .map(article -> SimpleArticleResponse.of(article))
                 .toList();
 
-        //각 Article을 SimpleArticleResponse로 변환하고, 변환된 DTO들 다시 리스트로 바꾸기
-
         /*3. articleResponseList (DTO 리스트) 반환 */
         return articleResponseList;
     }
 
-    //단일 글 조회
-    public ArticleResponse getArticle(Long id){
-        /* 1. JPA의 findById()를 사용하여 DB에서 id가 일치하는 게시글 찾기.
-              id가 일치하는 게시글이 DB에 없으면 에러 반환*/
-        Article article=articleRepository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("해당 ID의 게시글을 찾을 수 없습니다. ID: "+id));
 
-        /*2. ArticleResponse DTO 생성하여 반환 */
-        return ArticleResponse.of(article);
-    }
 
     //글 수정
     @Transactional
@@ -67,7 +80,7 @@ public class ArticleService {
             request.getPassword() : 게시글 수정 요청을 보낸 사람이 입력한 비밀번호
             article.getPassword() : 데이터베이스에 저장된 비밀번호 (작성자가 글 쓸때 등록한)
          */
-        if(!request.getPassword().equals(article.getPassword())){
+        if(!article.getPassword().equals(request.getPassword())){
             throw new RuntimeException("해당 글에 대한 수정 권한이 없습니다.");
         }
 
@@ -77,6 +90,7 @@ public class ArticleService {
 
         /* ArticleResponse로 변환해서 리턴 */
         return ArticleResponse.of(article);
+
     }
 
     //글 삭제
@@ -93,9 +107,10 @@ public class ArticleService {
         if(!request.getPassword().equals(article.getPassword())){
             throw new RuntimeException("해당 글에 대한 삭제 권한이 없습니다.");
         }
+
         /*3. 게시글 삭제 */
         articleRepository.deleteById(id);
-    }
 
+    }
 
 }
