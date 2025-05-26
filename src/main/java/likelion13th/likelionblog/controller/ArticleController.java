@@ -1,10 +1,15 @@
 package likelion13th.likelionblog.controller;
 
-import likelion13th.likelionblog.dto.*;
+import likelion13th.likelionblog.dto.request.AddArticleRequest;
+import likelion13th.likelionblog.dto.request.DeleteRequest;
+import likelion13th.likelionblog.dto.request.UpdateArticleRequest;
+import likelion13th.likelionblog.dto.response.ApiResponse;
+import likelion13th.likelionblog.dto.response.ArticleDetailResponse;
+import likelion13th.likelionblog.dto.response.ArticleResponse;
+import likelion13th.likelionblog.dto.response.SimpleArticleResponse;
 import likelion13th.likelionblog.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +37,7 @@ public class ArticleController {
     /*게시글 단일 조회*/
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> ReadArticle(@PathVariable long id){
-        ArticleResponse response = articleService.getArticle(id);
+        ArticleDetailResponse response = articleService.getArticle(id);
         return ResponseEntity.ok(new ApiResponse(true,200,"게시글 조회 성공", response));
     }
 

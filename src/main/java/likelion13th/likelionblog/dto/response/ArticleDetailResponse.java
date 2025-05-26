@@ -1,4 +1,4 @@
-package likelion13th.likelionblog.dto;
+package likelion13th.likelionblog.dto.response;
 
 
 import likelion13th.likelionblog.domain.Article;

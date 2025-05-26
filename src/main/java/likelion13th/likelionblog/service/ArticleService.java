@@ -3,7 +3,13 @@ package likelion13th.likelionblog.service;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import likelion13th.likelionblog.domain.Article;
-import likelion13th.likelionblog.dto.*;
+import likelion13th.likelionblog.dto.request.AddArticleRequest;
+import likelion13th.likelionblog.dto.request.DeleteRequest;
+import likelion13th.likelionblog.dto.request.UpdateArticleRequest;
+import likelion13th.likelionblog.dto.response.ArticleDetailResponse;
+import likelion13th.likelionblog.dto.response.ArticleResponse;
+import likelion13th.likelionblog.dto.response.CommentResponse;
+import likelion13th.likelionblog.dto.response.SimpleArticleResponse;
 import likelion13th.likelionblog.repository.ArticleRepository;
 import likelion13th.likelionblog.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +24,7 @@ public class ArticleService {
     private final CommentRepository commentRepository;
 
     //단일 글 조회
-    public ArticleResponse getArticle(Long id){
+    public ArticleDetailResponse getArticle(Long id){
          /*1. JPA의 findById()를 사용하여 DB에서 id가 일치하는 게시글 찾기.
               id가 일치하는 게시글이 DB에 없으면 에러 반환*/
         Article article=articleRepository.findById(id)
@@ -28,7 +34,7 @@ public class ArticleService {
         List<CommentResponse> comments=getCommentList(article);
 
         //3. ArticleResponse DTO 생성하여 반환
-        return ArticleResponse.of(article);
+        return ArticleDetailResponse.of(article,comments);
     }
 
     //특정 게시글에 달려있는 댓글목록 가져오기

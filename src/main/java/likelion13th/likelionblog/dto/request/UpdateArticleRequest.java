@@ -1,8 +1,6 @@
-package likelion13th.likelionblog.dto;
+package likelion13th.likelionblog.dto.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 

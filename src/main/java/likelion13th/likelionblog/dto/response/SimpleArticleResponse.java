@@ -1,29 +1,22 @@
-package likelion13th.likelionblog.dto;
-
+package likelion13th.likelionblog.dto.response;
 import likelion13th.likelionblog.domain.Article;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Builder
 @AllArgsConstructor
-public class ArticleResponse {
+public class SimpleArticleResponse {
     private final Long id;
     private final String title;
-    private final String content;
     private final String author;
-    private final LocalDateTime createdAt;
 
-    public static ArticleResponse of(Article article) {
-        return ArticleResponse.builder()
+    public static SimpleArticleResponse of(Article article) {
+        return SimpleArticleResponse.builder()
                 .id(article.getId())
                 .title(article.getTitle())
-                .content(article.getContent())
                 .author(article.getAuthor())
-                .createdAt(article.getCreatedAt())
                 .build();
     }
 }
