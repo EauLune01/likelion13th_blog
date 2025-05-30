@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+//@RestController를 붙인 클래스는 스프링이 컴포넌트 스캔(Component Scan) 을 통해 자동으로 빈으로 등록
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/articles")
