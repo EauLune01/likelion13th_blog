@@ -4,7 +4,7 @@ spring:
     name: side-project-blog
 
   datasource:
-    url: jdbc:h2:mem:test     # H2 DB연결 주소 (In-Memory Mode)
+    url: jdbc:h2:mem:test     # H2 DB연결 주소 (In-Memory Mode), 휘발성
     driver-class-name: org.h2.Driver
     username: sm           # H2 DB 접속 ID (사용자 지정)
     password: sm        # H2 DB 접속 PW (사용자 지정)
@@ -19,7 +19,7 @@ spring:
     jpa:
       database-platform: org.hibernate.dialect.H2Dialect
       hibernate:
-        ddl-auto: create        # DB 초기화 전략 (none, create, create-drop, update, validate)
+        ddl-auto: update       # DB 초기화 전략 (none, create, create-drop, update, validate)
       properties:
         hibernate:
           dialect: org.hibernate.dialect.H2Dialect

@@ -1,6 +1,5 @@
 package likelion13th.likelionblog.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import likelion13th.likelionblog.domain.Article;
 import likelion13th.likelionblog.dto.request.AddArticleRequest;
@@ -48,14 +47,12 @@ public class ArticleService {
 
     //게시글 생성
     public ArticleResponse addArticle(AddArticleRequest request){
-        //1. request 객체의 .toEntity()를 통해 Article 객체 생성
-        Article article=request.toEntity();
 
-        //2. Article객체를 JPA의 save() 를 사용하여 DB에 저장
-        articleRepository.save(article);
+        /*Article article = request.toEntity();
+        articleRepository.save(article); 이 id가 부여된 객체를 Article 타입 변수에 담아야 함
+        return ArticleResponse.of(article); 기존 코드: 여기서의 article은 id 부여가 안된 객체*/
 
-       /* 3. article 객체를 response DTO 생성하여 반환
-          response 클래스의 정작 팩토리 메서드 of() 통해 API 응답객체 생성 */
+        Article article = articleRepository.save(request.toEntity());
         return ArticleResponse.of(article);
     }
 
